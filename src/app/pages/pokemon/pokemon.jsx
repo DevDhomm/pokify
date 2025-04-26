@@ -1,8 +1,10 @@
+// PokemonInfo.jsx
 "use client"
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import styles from "./PokemonInfo.module.css";
+import styles from './PokemonInfo.module.css';
+
 const PokemonInfo = ({ pokemonName }) => {
   const [pokemon, setPokemon] = useState(null);
   const [species, setSpecies] = useState(null);
@@ -14,33 +16,24 @@ const PokemonInfo = ({ pokemonName }) => {
     if (!name) return;
     const fetchData = async () => {
       try {
-        // Fetch main Pokémon data
         const res = await fetch(
           `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
         );
         const data = await res.json();
-
-        // Fetch species data for description, genus, egg groups, etc.
         const speciesRes = await fetch(data.species.url);
         const speciesData = await speciesRes.json();
-
-        // Fetch evolution chain
         const evoRes = await fetch(speciesData.evolution_chain.url);
         const evoData = await evoRes.json();
 
-        // Recursive parse of evolution names
         const parseChain = (chain) => {
           let names = [chain.species.name];
-          if (chain.evolves_to.length) {
-            chain.evolves_to.forEach((e) => {
-              names = names.concat(parseChain(e));
-            });
-          }
+          chain.evolves_to.forEach((e) => {
+            names = names.concat(parseChain(e));
+          });
           return names;
         };
         const evoNames = parseChain(evoData.chain);
 
-        // Fetch details (images) for each evolution
         const evoDetails = await Promise.all(
           evoNames.map(async (evoName) => {
             try {
@@ -48,6 +41,7 @@ const PokemonInfo = ({ pokemonName }) => {
                 `https://pokeapi.co/api/v2/pokemon/${evoName}`
               );
               const evoData = await evoRes.json();
+              // Prioritize home artwork, then dream_world, then official-artwork, then default
               const image =
                 evoData.sprites.other.home?.front_default ||
                 evoData.sprites.other['dream_world']?.front_default ||
@@ -72,37 +66,73 @@ const PokemonInfo = ({ pokemonName }) => {
     fetchData();
   }, [name]);
 
-  if (loading) return <p>Loading...</p>;
-  if (!pokemon || !species) return <p>Pokémon non trouvé.</p>;
+  if (loading) return <p className={styles.loading}>Loading...</p>;
+  if (!pokemon || !species) return <p className={styles.error}>Pokémon non trouvé.</p>;
 
-  // Determine best available main image
+  // Determine best available main image: home > dream_world > official-artwork > default
   const mainImage =
     pokemon.sprites.other.home?.front_default ||
     pokemon.sprites.other['dream_world']?.front_default ||
     pokemon.sprites.other['official-artwork']?.front_default ||
     pokemon.sprites.front_default;
 
-  // Get English description and genus
   const flavorEntry =
     species.flavor_text_entries.find((e) => e.language.name === 'en')?.flavor_text.replace(/\n|\f/g, ' ') || '';
   const genus = species.genera.find((g) => g.language.name === 'en')?.genus || '';
 
+  // Map stats to CSS module classes
+  const statClasses = {
+    hp: styles.statHp,
+    attack: styles.statAttack,
+    defense: styles.statDefense,
+    'special-attack': styles.statSpecialAttack,
+    'special-defense': styles.statSpecialDefense,
+    speed: styles.statSpeed,
+  };
+
   return (
     <div className={styles.pokemonContainer}>
-      <h1 className={styles["pokemon-name"]}>{pokemon.name}</h1>
-      <p className={styles["pokemon-genus"]}><em>{genus}</em></p>
+        <div className={styles.box}>
+            <div className={styles.box1}>
+            <h1 className={styles.pokemonName}>{pokemon.name}</h1>
+      <p className={styles.pokemonGenus}><em>{genus}</em></p>
       <img
+        className={styles.pokemonImage}
         src={mainImage}
         alt={pokemon.name}
-        width={300}
-        height={300}
-        className={styles["pokemon-image"]}
       />
 
-      <section className={styles["info-section"]}>
+            </div>
+
+            <div className={styles.box2}>
+            <section className={styles.infoSection}>
+        <h2>Stats</h2>
+        <div className={styles.statsContainer}>
+          {pokemon.stats.map((s) => (
+            <div key={s.stat.name} className={`${styles.statBox} ${statClasses[s.stat.name] || ''}`}>
+              <p className={styles.statName}>{s.stat.name}</p>
+              <div className={styles.progressBar}>
+                <div
+                  className={styles.progressFill}
+                  style={{ width: `${s.base_stat}%` }}
+                >
+                  <span className={styles.progressValue}>{s.base_stat}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+            </div>
+        </div>
+
+      <section className={styles.infoSection}>
         <h2>Description</h2>
         <p>{flavorEntry}</p>
       </section>
+
+      
+        
 
       <section className={styles["info-section"]}>
         <h2>Types & Caractéristiques</h2>
@@ -110,11 +140,7 @@ const PokemonInfo = ({ pokemonName }) => {
         <p>Height: {pokemon.height / 10} m</p>
         <p>Weight: {pokemon.weight / 10} kg</p>
         <p>Base Exp: {pokemon.base_experience}</p>
-        <ul className={styles.stats}>
-          {pokemon.stats.map((s) => (
-            <li key={s.stat.name}>{s.stat.name}: {s.base_stat}</li>
-          ))}
-        </ul>
+
       </section>
 
       <section className={styles["info-section"]}>
