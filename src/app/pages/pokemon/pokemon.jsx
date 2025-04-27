@@ -11,7 +11,8 @@ const PokemonInfo = ({ pokemonName }) => {
   const [evolutions, setEvolutions] = useState([]);
   const [loading, setLoading] = useState(true);
   const name = pokemonName || useRouter().query.name;
-
+  const [abilities, setAbilities] = useState([]);
+  
   useEffect(() => {
     if (!name) return;
     const fetchData = async () => {
@@ -53,7 +54,15 @@ const PokemonInfo = ({ pokemonName }) => {
             }
           })
         );
-
+       const abilityDetails = await Promise.all(
+          data.abilities.map(async (a) => {
+            const r = await fetch(a.ability.url);
+            const j = await r.json();
+            const entry = j.effect_entries.find(e => e.language.name === 'en');
+            return { name: a.ability.name, short_effect: entry?.short_effect || '' };
+          })
+        );
+        setAbilities(abilityDetails);
         setPokemon(data);
         setSpecies(speciesData);
         setEvolutions(evoDetails);
@@ -147,7 +156,18 @@ const PokemonInfo = ({ pokemonName }) => {
               ))}
             </div>
           </section>
-          <section className={styles.infoSection2}>
+          <section>
+            <h2>Abilities</h2>
+            <ul className={styles.abilities}>
+              {abilities.map((a) => (
+                <li key={a.name} className={styles.abilityBadge}>
+                  {a.name}
+                  <span className={styles.tooltip}>{a.short_effect}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+          <section className={styles.infoSection}>
             <h2>Description</h2>
             <p>{flavorEntry}</p>
           </section>
@@ -155,11 +175,7 @@ const PokemonInfo = ({ pokemonName }) => {
       </div>
 
       <section className={styles.infoSection3}>
-        <div
-          style={{
-            background: "linear-gradient(to right, var(--c1), var(--c2))",
-          }}
-        >
+        <div>
           Types:
           {types.map((type) => (
             <span
@@ -176,18 +192,7 @@ const PokemonInfo = ({ pokemonName }) => {
         <div>Base Exp: {pokemon.base_experience}</div>
       </section>
 
-      <section className={styles["info-section"]}>
-        <h2>Abilities</h2>
-        <ul className={styles.abilities}>
-          {pokemon.abilities.map((a) => (
-            <li key={a.ability.name}>{a.ability.name}</li>
-          ))}
-        </ul>
-      </section>
-
-
-
-      <section className={styles["info-section"]}>
+      <section className={styles.evolutionSection}>
         <h2>Evolution Chain</h2>
         <ul className={styles.evolutions}>
           {evolutions.map((evo) => (
@@ -199,7 +204,7 @@ const PokemonInfo = ({ pokemonName }) => {
                     alt={evo.name}
                     width={150}
                     height={150}
-                    className={styles["evo-image"]}
+                    className={styles.evoImage}
                   />
                 )}
                 <p>{evo.name}</p>
@@ -207,14 +212,6 @@ const PokemonInfo = ({ pokemonName }) => {
             </li>
           ))}
         </ul>
-      </section>
-
-      <section className={styles["info-section"]}>
-        <h2>Espèce & Reproduction</h2>
-        <p>Habitat: {species.habitat?.name || "Unknown"}</p>
-        <p>Egg Groups: {species.egg_groups.map((e) => e.name).join(", ")}</p>
-        <p>Capture Rate: {species.capture_rate}</p>
-        <p>Growth Rate: {species.growth_rate.name}</p>
       </section>
     </div>
   );

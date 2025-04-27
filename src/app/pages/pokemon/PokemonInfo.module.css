@@ -7,7 +7,13 @@
     color: #333;
     background-size: 200% 200%;
     /* animation: gradientShift 10s ease infinite; */
-  }
+    box-shadow: 0 4px 24px rgba(25, 118, 210, 0.08);
+    border-radius: 16px;
+    transition: box-shadow 0.3s;
+}
+.pokemonContainer:focus-within, .pokemonContainer:hover {
+  box-shadow: 0 8px 32px rgba(25, 118, 210, 0.16);
+}
 
 /* Anime un gradient sur le texte */
 .animatedText,
@@ -58,13 +64,25 @@
     object-fit: contain;
     border: 2px solid #eee;
     border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
   }
+  .pokemonImage:hover, .pokemonImage:focus {
+    transform: scale(1.04) rotate(-2deg);
+    box-shadow: 0 6px 24px rgba(25, 118, 210, 0.18);
+  }
+
   .infoSection {
     background: #f9f9f9;
     padding: 1rem;
     margin: 1rem 0;
     border-radius: 6px;
-    border: #1976d2 1px solid
+    border: #1976d2 1px solid;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.06);
+    transition: box-shadow 0.2s;
+  }
+  .infoSection:hover {
+    box-shadow: 0 6px 24px rgba(25, 118, 210, 0.12);
   }
 
   .infoSection3{  
@@ -74,10 +92,13 @@
     border-radius: 6px;
     border: #1976d2 1px solid;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+    flex-wrap: wrap;
     gap: 1rem;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.06);
+    transition: box-shadow 0.2s;
+  }
+  .infoSection3:hover {
+    box-shadow: 0 6px 24px rgba(25, 118, 210, 0.12);
   }
   .infoSection3 div{
     border: #1976d2 1px solid;
@@ -106,7 +127,7 @@
 
   .stats{
     width: 300px;
-    
+    max-width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
@@ -190,6 +211,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
     min-width: 550px;
+    max-width: 100%;
   }
   .progressBar {
     background: #ddd;
@@ -197,6 +219,7 @@
     overflow: hidden;
     height: 0.7rem;
     position: relative;
+    transition: background 0.3s;
   }
   .progressFill {
     height: 100%;
@@ -205,6 +228,7 @@
     align-items: center;
     justify-content: center;
     padding-right: 0.25rem;
+    transition: width 0.7s cubic-bezier(.4,2,.6,1), background 0.3s;
   }
   .progressValue {
     font-size: 0.75rem;
@@ -212,7 +236,7 @@
     font-weight: bold;
   }
 
-  .abilities ul,
+
   .forms ul,
   .evolutions ul {
     list-style: none;
@@ -222,7 +246,7 @@
     gap: 0.5rem;
   }
   .stats li,
-  .abilities li,
+
   .forms li {
     background: #fff;
     padding: 0.5rem;
@@ -246,3 +270,144 @@
     font-size: 1.2rem;
     color: #999;
   }
+
+  /* Badges “pill” interactifs */
+.abilityBadge {
+  display: inline-flex;
+  align-items: center;
+  background: #444;                      /* fond gris sombre */
+  color: #fff;                           /* texte blanc */
+  padding: 0.25rem 0.75rem;              /* taille et espacement */
+  border-radius: 9999px;                 /* forme “pill” */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);  /* ombre portée */
+  margin: 0.25rem;                       /* espacement entre badges */
+  position: relative;                    /* pour positionner le tooltip */
+  cursor: default;
+  text-transform: capitalize;
+  transition: transform 0.2s ease,       /* animation au survol */
+              box-shadow 0.2s ease;
+  outline: none;
+}
+.abilityBadge:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}                                          
+.abilityBadge:focus {
+  box-shadow: 0 0 0 3px #1976d2;
+  z-index: 2;
+}
+/* Tooltip discret */
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);            /* juste au-dessus du badge */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);            /* fond semi-transparent */
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  white-space: normal;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-size: 0.875rem;
+  width: max-content;
+  max-width: 200px;
+  text-align: center;
+}
+.abilityBadge:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+/* Petite flèche sous le tooltip */
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;                              /* coller au bas de la bulle */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0.4rem;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.8) transparent transparent transparent;
+}
+
+.abilityBadge {
+  --g1: #f9d423;  
+  --g2: #ff4e50;
+  background-image: linear-gradient(45deg, var(--g1), var(--g2));
+  background-size: 200% 200%;
+  animation: badgeGradient 4s ease infinite;
+}
+/* Reste identique… */
+@keyframes badgeGradient {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+
+.evolutionSection {
+  background: #f9f9f9;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 6px;
+  border: #1976d2 1px solid;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.06);
+  transition: box-shadow 0.2s;
+}
+.evolutionSection:hover {
+  box-shadow: 0 6px 24px rgba(25, 118, 210, 0.12);
+}
+
+.evolutionSection ul{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.evolutionSection ul li{
+  text-transform: capitalize;
+  list-style: none;
+  text-align: center;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: #1976d2 1px solid;
+  transition: transform 0.2s ease,       /* animation au survol */
+              box-shadow 0.2s ease;
+  background: #fff;
+}
+
+.evolutionSection ul li:hover{
+  transform: translateX(-2px) scale(1.05);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 700px) {
+  .pokemonContainer {
+    width: 98%;
+    padding: 0.5rem;
+  }
+  .box{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .infoSection3{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .statsContainer, .stats {
+    min-width: unset;
+    grid-template-columns: 1fr;
+  }
+  .evo-image {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+@media (max-width: 400px) {
+
+
+}
