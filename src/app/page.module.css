@@ -1,12 +1,4 @@
-.page {
-  --gray-rgb: 0, 0, 0;
-  --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
-  --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
 
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-
-}
 
 
 /* .main {
@@ -109,10 +101,10 @@ a.secondary {
 }
 
 @media (max-width: 600px) {
-  .page {
+  /* .page {
     padding: 32px;
     padding-bottom: 80px;
-  }
+  } */
 
   .main {
     align-items: center;

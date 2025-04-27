@@ -1,10 +1,10 @@
 // PokemonInfo.jsx
-"use client"
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import styles from './PokemonInfo.module.css';
-
+"use client";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import styles from "./PokemonInfo.module.css";
+import { TYPE_COLORS } from "./typeColors";
 const PokemonInfo = ({ pokemonName }) => {
   const [pokemon, setPokemon] = useState(null);
   const [species, setSpecies] = useState(null);
@@ -44,8 +44,8 @@ const PokemonInfo = ({ pokemonName }) => {
               // Prioritize home artwork, then dream_world, then official-artwork, then default
               const image =
                 evoData.sprites.other.home?.front_default ||
-                evoData.sprites.other['dream_world']?.front_default ||
-                evoData.sprites.other['official-artwork']?.front_default ||
+                evoData.sprites.other["dream_world"]?.front_default ||
+                evoData.sprites.other["official-artwork"]?.front_default ||
                 evoData.sprites.front_default;
               return { name: evoName, image };
             } catch {
@@ -67,76 +67,110 @@ const PokemonInfo = ({ pokemonName }) => {
   }, [name]);
 
   if (loading) return <p className={styles.loading}>Loading...</p>;
-  if (!pokemon || !species) return <p className={styles.error}>Pokémon non trouvé.</p>;
+  if (!pokemon || !species)
+    return <p className={styles.error}>Pokémon non trouvé.</p>;
 
   // Determine best available main image: home > dream_world > official-artwork > default
   const mainImage =
     pokemon.sprites.other.home?.front_default ||
-    pokemon.sprites.other['dream_world']?.front_default ||
-    pokemon.sprites.other['official-artwork']?.front_default ||
+    pokemon.sprites.other["dream_world"]?.front_default ||
+    pokemon.sprites.other["official-artwork"]?.front_default ||
     pokemon.sprites.front_default;
 
   const flavorEntry =
-    species.flavor_text_entries.find((e) => e.language.name === 'en')?.flavor_text.replace(/\n|\f/g, ' ') || '';
-  const genus = species.genera.find((g) => g.language.name === 'en')?.genus || '';
+    species.flavor_text_entries
+      .find((e) => e.language.name === "en")
+      ?.flavor_text.replace(/\n|\f/g, " ") || "";
+  const genus =
+    species.genera.find((g) => g.language.name === "en")?.genus || "";
 
   // Map stats to CSS module classes
   const statClasses = {
     hp: styles.statHp,
     attack: styles.statAttack,
     defense: styles.statDefense,
-    'special-attack': styles.statSpecialAttack,
-    'special-defense': styles.statSpecialDefense,
+    "special-attack": styles.statSpecialAttack,
+    "special-defense": styles.statSpecialDefense,
     speed: styles.statSpeed,
   };
+  const types = pokemon.types.map((t) => t.type.name);
+
+  const primary = TYPE_COLORS[types[0]] || "#777";
+  const secondary = types[1] ? TYPE_COLORS[types[1]] : primary;
 
   return (
-    <div className={styles.pokemonContainer}>
-        <div className={styles.box}>
-            <div className={styles.box1}>
-            <h1 className={styles.pokemonName}>{pokemon.name}</h1>
-      <p className={styles.pokemonGenus}><em>{genus}</em></p>
-      <img
-        className={styles.pokemonImage}
-        src={mainImage}
-        alt={pokemon.name}
-      />
+    <div
+      style={{ "--c1": primary, "--c2": secondary }}
+      className={styles.pokemonContainer}
+    >
+      <div className={styles.box}>
+        <div className={styles.box1}>
+          <h1
+            className={`${styles.pokemonName} ${styles.animatedText}`}
+            style={{ "--c1": primary, "--c2": secondary }}
+          >
+            {pokemon.name}
+          </h1>
+          <p className={styles.pokemonGenus}>
+            <em>{genus}</em>
+          </p>
+          <img
+            className={styles.pokemonImage}
+            src={mainImage}
+            alt={pokemon.name}
+          />
+        </div>
 
-            </div>
-
-            <div className={styles.box2}>
-            <section className={styles.infoSection}>
-        <h2>Stats</h2>
-        <div className={styles.statsContainer}>
-          {pokemon.stats.map((s) => (
-            <div key={s.stat.name} className={`${styles.statBox} ${statClasses[s.stat.name] || ''}`}>
-              <p className={styles.statName}>{s.stat.name}</p>
-              <div className={styles.progressBar}>
+        <div className={styles.box2}>
+          <section className={styles.infoSection}>
+            <h2>Stats</h2>
+            <div className={styles.statsContainer}>
+              {pokemon.stats.map((s) => (
                 <div
-                  className={styles.progressFill}
-                  style={{ width: `${s.base_stat}%` }}
+                  key={s.stat.name}
+                  className={`${styles.statBox} ${
+                    statClasses[s.stat.name] || ""
+                  }`}
                 >
-                  <span className={styles.progressValue}>{s.base_stat}</span>
+                  <p className={styles.statName}>{s.stat.name}</p>
+                  <div className={styles.progressBar}>
+                    <div
+                      className={styles.progressFill}
+                      style={{ width: `${s.base_stat}%` }}
+                    >
+                      <span className={styles.progressValue}>
+                        {s.base_stat}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-          ))}
+          </section>
+          <section className={styles.infoSection2}>
+            <h2>Description</h2>
+            <p>{flavorEntry}</p>
+          </section>
         </div>
-      </section>
-      <section className={styles.infoSection2}>
-        <h2>Description</h2>
-        <p>{flavorEntry}</p>
-      </section>
-            </div>
-        </div>
-
-
-
-      
-        
+      </div>
 
       <section className={styles.infoSection3}>
-        <div>Types: {pokemon.types.map((t) => t.type.name).join(', ')}</div>
+        <div
+          style={{
+            background: "linear-gradient(to right, var(--c1), var(--c2))",
+          }}
+        >
+          Types:
+          {types.map((type) => (
+            <span
+              key={type}
+              className={`${styles.pokemonType} ${styles.animatedType}`}
+              style={{ "--c1": TYPE_COLORS[type], "--c2": "#fff" }}
+            >
+              {type}
+            </span>
+          ))}
+        </div>
         <div>Height: {pokemon.height / 10} m</div>
         <div>Weight: {pokemon.weight / 10} kg</div>
         <div>Base Exp: {pokemon.base_experience}</div>
@@ -151,16 +185,7 @@ const PokemonInfo = ({ pokemonName }) => {
         </ul>
       </section>
 
-      <section className={styles["info-section"]}>
-        <h2>Formes</h2>
-        <ul className={styles.forms}>
-          {pokemon.forms.map((f) => (
-            <li key={f.name}>
-              <Link href={`/pokemon/${f.name}`}>{f.name}</Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+
 
       <section className={styles["info-section"]}>
         <h2>Evolution Chain</h2>
@@ -186,12 +211,12 @@ const PokemonInfo = ({ pokemonName }) => {
 
       <section className={styles["info-section"]}>
         <h2>Espèce & Reproduction</h2>
-        <p>Habitat: {species.habitat?.name || 'Unknown'}</p>
-        <p>Egg Groups: {species.egg_groups.map((e) => e.name).join(', ')}</p>
+        <p>Habitat: {species.habitat?.name || "Unknown"}</p>
+        <p>Egg Groups: {species.egg_groups.map((e) => e.name).join(", ")}</p>
         <p>Capture Rate: {species.capture_rate}</p>
         <p>Growth Rate: {species.growth_rate.name}</p>
       </section>
     </div>
   );
-}
+};
 export default PokemonInfo;

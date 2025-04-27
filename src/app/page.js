@@ -4,7 +4,7 @@ import PokemonInfo from "./pages/pokemon/pokemon";
 export default function Home() {
   return (
     <div className={styles.page}>
-        <PokemonInfo pokemonName="Houndour" />
+        <PokemonInfo pokemonName="Eevee" />
     </div>
   );
 }
