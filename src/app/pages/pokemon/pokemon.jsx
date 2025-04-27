@@ -123,24 +123,23 @@ const PokemonInfo = ({ pokemonName }) => {
           ))}
         </div>
       </section>
-            </div>
-        </div>
-
-      <section className={styles.infoSection}>
+      <section className={styles.infoSection2}>
         <h2>Description</h2>
         <p>{flavorEntry}</p>
       </section>
+            </div>
+        </div>
+
+
 
       
         
 
-      <section className={styles["info-section"]}>
-        <h2>Types & Caractéristiques</h2>
-        <p>Types: {pokemon.types.map((t) => t.type.name).join(', ')}</p>
-        <p>Height: {pokemon.height / 10} m</p>
-        <p>Weight: {pokemon.weight / 10} kg</p>
-        <p>Base Exp: {pokemon.base_experience}</p>
-
+      <section className={styles.infoSection3}>
+        <div>Types: {pokemon.types.map((t) => t.type.name).join(', ')}</div>
+        <div>Height: {pokemon.height / 10} m</div>
+        <div>Weight: {pokemon.weight / 10} kg</div>
+        <div>Base Exp: {pokemon.base_experience}</div>
       </section>
 
       <section className={styles["info-section"]}>

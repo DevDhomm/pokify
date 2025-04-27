@@ -28,6 +28,30 @@
     padding: 1rem;
     margin: 1rem 0;
     border-radius: 6px;
+    border: #1976d2 1px solid
+  }
+
+  .infoSection3{  
+    background: #f9f9f9;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 6px;
+    border: #1976d2 1px solid;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .infoSection3 div{
+    border: #1976d2 1px solid;
+    padding: 1rem;
+    border-radius: 10px;
+  }
+
+  .infoSection3 :nth-child(1){
+    border: #000000 1px solid;
+
   }
   .infoSection h2 {
     margin-bottom: 0.5rem;
@@ -49,7 +73,7 @@
 
   .stats{
     width: 300px;
-    border: #0070f3 1px solid;  
+    
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
@@ -59,15 +83,16 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    ;
 
-    border: #0070f3 1px solid;
+   
   }
   .statBox {
     padding: 0.5rem;
     border-radius: 4px;
     flex: 1 1 120px;
     margin: 0.5rem;
-    border: #0070f3 1px solid;
+    
   }
   .statHp { 
     color: #d32f2f;
