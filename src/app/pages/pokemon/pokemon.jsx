@@ -5,13 +5,16 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import styles from "./PokemonInfo.module.css";
 import { TYPE_COLORS } from "./typeColors";
-const PokemonInfo = ({ pokemonName }) => {
+
+const PokemonInfo = ({ pokemonName, onChangePokemon }) => {
   const [pokemon, setPokemon] = useState(null);
   const [species, setSpecies] = useState(null);
   const [evolutions, setEvolutions] = useState([]);
   const [loading, setLoading] = useState(true);
   const name = pokemonName || useRouter().query.name;
   const [abilities, setAbilities] = useState([]);
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
+
   useEffect(() => {
     if (!name) return;
     const fetchData = async () => {
@@ -53,12 +56,17 @@ const PokemonInfo = ({ pokemonName }) => {
             }
           })
         );
-       const abilityDetails = await Promise.all(
+        const abilityDetails = await Promise.all(
           data.abilities.map(async (a) => {
             const r = await fetch(a.ability.url);
             const j = await r.json();
-            const entry = j.effect_entries.find(e => e.language.name === 'en');
-            return { name: a.ability.name, short_effect: entry?.short_effect || '' };
+            const entry = j.effect_entries.find(
+              (e) => e.language.name === "en"
+            );
+            return {
+              name: a.ability.name,
+              short_effect: entry?.short_effect || "",
+            };
           })
         );
         setAbilities(abilityDetails);
@@ -195,19 +203,17 @@ const PokemonInfo = ({ pokemonName }) => {
         <h2>Evolution Chain</h2>
         <ul className={styles.evolutions}>
           {evolutions.map((evo) => (
-            <li key={evo.name}>
-              <Link href={`/pokemon/${evo.name}`}>
-                {evo.image && (
-                  <img
-                    src={evo.image}
-                    alt={evo.name}
-                    width={150}
-                    height={150}
-                    className={styles.evoImage}
-                  />
-                )}
-                <p>{evo.name}</p>
-              </Link>
+            <li onClick={() => onChangePokemon(evo.name)} key={evo.name}>
+              {evo.image && (
+                <img
+                  src={evo.image}
+                  alt={evo.name}
+                  width={150}
+                  height={150}
+                  className={styles.evoImage}
+                />
+              )}
+              <p>{evo.name}</p>
             </li>
           ))}
         </ul>
