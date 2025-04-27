@@ -1,9 +1,25 @@
 /* PokemonInfo.css */
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Baloo+2:wght@400;600&display=swap');
+
+:root {
+  --font-body: 'Baloo 2', cursive;
+  --font-heading: 'Luckiest Guy', cursive;
+}
+
+
+.pokemonContainer {
+  font-family: var(--font-body);
+}
+
+.pokemonName {
+  font-family: var(--font-heading);
+  font-weight: 800;
+}
+
 .pokemonContainer {
    width: 80%;
    margin: 2rem auto;
     
-    font-family: Arial, sans-serif;
     color: #333;
     background-size: 200% 200%;
     /* animation: gradientShift 10s ease infinite; */
@@ -77,12 +93,12 @@
     padding: 1rem;
     margin: 1rem 0;
     border-radius: 6px;
-    border: #1976d2 1px solid;
-    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.06);
+    
+    box-shadow: 0 2px 8px rgba(4, 15, 26, 0.308);
     transition: box-shadow 0.2s;
   }
   .infoSection:hover {
-    box-shadow: 0 6px 24px rgba(25, 118, 210, 0.12);
+    box-shadow: 0 6px 24px rgba(4, 19, 34, 0.37);
   }
 
   .infoSection3{  
@@ -90,18 +106,18 @@
     padding: 1rem;
     margin: 1rem 0;
     border-radius: 6px;
-    border: #1976d2 1px solid;
+    border: #43597025 1px solid;
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.06);
+    box-shadow: 0 2px 8px rgba(4, 15, 26, 0.308);
     transition: box-shadow 0.2s;
   }
   .infoSection3:hover {
-    box-shadow: 0 6px 24px rgba(25, 118, 210, 0.12);
+    box-shadow: 0 6px 24px rgba(4, 19, 34, 0.37);
   }
   .infoSection3 div{
-    border: #1976d2 1px solid;
+    border: #1976d259 1px solid;
     padding: 1rem;
     border-radius: 10px;
   }
@@ -347,10 +363,10 @@
 
 .evolutionSection {
   background: #f9f9f9;
+
   padding: 1rem;
   margin: 1rem 0;
   border-radius: 6px;
-  border: #1976d2 1px solid;
   box-shadow: 0 2px 8px rgba(25, 118, 210, 0.06);
   transition: box-shadow 0.2s;
 }
@@ -370,10 +386,9 @@
   margin: 0.5rem;
   padding: 0.5rem;
   border-radius: 6px;
-  border: #1976d2 1px solid;
   transition: transform 0.2s ease,       /* animation au survol */
               box-shadow 0.2s ease;
-  background: #fff;
+
 }
 
 .evolutionSection ul li:hover{

@@ -12,7 +12,6 @@ const PokemonInfo = ({ pokemonName }) => {
   const [loading, setLoading] = useState(true);
   const name = pokemonName || useRouter().query.name;
   const [abilities, setAbilities] = useState([]);
-  
   useEffect(() => {
     if (!name) return;
     const fetchData = async () => {
@@ -67,7 +66,7 @@ const PokemonInfo = ({ pokemonName }) => {
         setSpecies(speciesData);
         setEvolutions(evoDetails);
       } catch (err) {
-        console.error(err);
+        return <p className={styles.error}>Pokémon non trouvé.</p>;
       } finally {
         setLoading(false);
       }
