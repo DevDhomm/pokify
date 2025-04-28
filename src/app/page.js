@@ -31,7 +31,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
         <form action="" onSubmit={handleSubmit} className={styles.form}>
-        <input type="text" className={styles.input} />
+        <input type="text" placeholder="Enter a Pokémon" required className={styles.input} />
         <button type="submit" className={styles.button}>Search</button>
         </form>
         <PokemonInfo pokemonName={name} onChangePokemon={handleChangePokemon} />

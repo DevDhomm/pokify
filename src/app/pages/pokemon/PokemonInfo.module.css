@@ -1,17 +1,19 @@
 /* PokemonInfo.css */
 @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Baloo+2:wght@400;600&display=swap');
 
-:root {
-  --font-body: 'Baloo 2', cursive;
-  --font-heading: 'Luckiest Guy', cursive;
-}
+
+ 
+
+
 
 
 .pokemonContainer {
+  --font-body: 'Baloo 2', cursive;
   font-family: var(--font-body);
 }
 
 .pokemonName {
+  --font-heading: 'Luckiest Guy', cursive;
   font-family: var(--font-heading);
   font-weight: 800;
 }
