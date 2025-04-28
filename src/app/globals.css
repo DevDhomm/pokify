@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
 
 :root {
-  --font-body: 'Roboto', sans-serif;
-  --font-heading: 'Press Start 2P', cursive;
   background: #f9f9f9;
 
 }
